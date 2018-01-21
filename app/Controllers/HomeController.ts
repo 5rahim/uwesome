@@ -2,6 +2,7 @@ import {Router, Request, Response, NextFunction} from 'express';
 import Door from '../../core/Door';
 import UserModel from '../../app/Models/UserModel';
 import Validator from "../../core/Validator";
+import Notify from "../../core/Notify";
 
 export class HomeController {
 
@@ -36,7 +37,8 @@ export class HomeController {
                 pageTitle: 'home',
                 req: req,
                 csrfToken: req.csrfToken(),
-                user: await UserModel.findBy('token', req.session.user)
+                user: await UserModel.findBy('token', req.session.user),
+                Notify: Notify
             }
 
             res.render('home/index', data);

@@ -38,6 +38,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
 var Door_1 = require("../../core/Door");
 var UserModel_1 = require("../../app/Models/UserModel");
+var Notify_1 = require("../../core/Notify");
 var ProfileController = /** @class */ (function () {
     function ProfileController() {
         this.router = express_1.Router();
@@ -76,7 +77,8 @@ var ProfileController = /** @class */ (function () {
                         return [4 /*yield*/, Door_1.default.getUser(req)];
                     case 2:
                         _a.user = _b.sent(),
-                            _a.pUser = pUser;
+                            _a.pUser = pUser,
+                            _a.Notify = Notify_1.default;
                         return [4 /*yield*/, this.profileGradient(pUser.profile_gradient)];
                     case 3:
                         data = (_a.profileGradient = _b.sent(),

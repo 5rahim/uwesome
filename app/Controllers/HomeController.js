@@ -38,6 +38,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
 var Door_1 = require("../../core/Door");
 var UserModel_1 = require("../../app/Models/UserModel");
+var Notify_1 = require("../../core/Notify");
 var HomeController = /** @class */ (function () {
     function HomeController() {
         this.router = express_1.Router();
@@ -70,6 +71,7 @@ var HomeController = /** @class */ (function () {
                         return [4 /*yield*/, UserModel_1.default.findBy('token', req.session.user)];
                     case 1:
                         data = (_a.user = _b.sent(),
+                            _a.Notify = Notify_1.default,
                             _a);
                         res.render('home/index', data);
                         return [2 /*return*/];

@@ -1017,10 +1017,24 @@ a {
       .topbar .topbar-icons ul li {
         float: left;
         margin: 0 .6em;
-        color: rgba(0, 0, 0, 0.5); }
+        color: rgba(0, 0, 0, 0.5);
+        position: relative; }
         .topbar .topbar-icons ul li:hover {
           cursor: pointer;
           color: #000; }
+        .topbar .topbar-icons ul li span.badge {
+          position: absolute;
+          right: -.7em;
+          top: -.8em;
+          color: #fff;
+          background-color: #ef4f47;
+          font-size: .7em;
+          font-weight: bold;
+          width: 18px;
+          height: 18px;
+          line-height: 18px;
+          text-align: center;
+          border-radius: 50%; }
 
 .tooltip {
   padding: 10px 8px;

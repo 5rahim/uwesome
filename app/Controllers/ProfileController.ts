@@ -2,6 +2,7 @@ import {Router, Request, Response, NextFunction} from 'express';
 import Door from '../../core/Door';
 import UserModel from '../../app/Models/UserModel';
 import Helpers from "../../core/Helpers";
+import Notify from "../../core/Notify";
 
 export class ProfileController {
 
@@ -48,6 +49,7 @@ export class ProfileController {
                     csrfToken: req.csrfToken(),
                     user: await Door.getUser(req),
                     pUser: pUser,
+                    Notify: Notify,
                     profileGradient: await this.profileGradient(pUser.profile_gradient),
                     isCurrentUserProfile: isCurrentUserProfile
                 }

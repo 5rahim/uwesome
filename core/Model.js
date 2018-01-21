@@ -16,6 +16,8 @@ var Model = /** @class */ (function () {
                     reject(err);
                 if (rows)
                     resolve(rows[0]);
+                else
+                    resolve(null);
             });
         });
     };

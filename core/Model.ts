@@ -23,6 +23,8 @@ export class Model {
 
                 if(rows)
                     resolve(rows[0])
+                else
+                    resolve(null)
 
             });
 
