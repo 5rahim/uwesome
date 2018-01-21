@@ -1,0 +1,78 @@
+<% include ../partials/header.ejs %>
+
+<% if(csrfToken) {
+    var csrfToken = csrfToken;
+} %>
+
+<div class="faze">
+
+    <div>
+        <div style="position: absolute; bottom: 0; ">
+            <img src="/images/image_bottom_02.png" class="landing-bottom" alt="">
+        </div>
+    </div>
+
+    <div class="container">
+
+        <div class="faze-logo">
+            <img src="/images/logo_faze.png" alt="">
+        </div>
+        <div class="faze-description"><%= __('faze.needs') %></div>
+
+        <div class="faze-continue" id="faze-continue">
+            <form action="validation" method="post" id="faze-continue-form">
+
+            </form>
+        </div>
+
+        <div class="faze-video">
+
+            <video id="video" width="320" height="240" preload autoplay loop muted></video>
+            <canvas id="canvas" width="320" height="240"></canvas>
+
+        </div>
+
+    </div>
+
+</div>
+
+<% include ../partials/footer.ejs %>
+<script>
+
+    window.onload = function() {
+
+        var video = document.getElementById('video');
+        var canvas = document.getElementById('canvas');
+        var context = canvas.getContext('2d');
+        var tracker = new tracking.ObjectTracker('face');
+        tracker.setInitialScale(4);
+        tracker.setStepSize(2);
+        tracker.setEdgesDensity(0.1);
+        tracking.track('#video', tracker, { camera: true });
+        var fazed = 0;
+
+        // Si un visage est détecté
+        tracker.on('track', function(event) {
+
+            if (event.data.length === 0) {
+
+
+
+            } else {
+                context.clearRect(0, 0, canvas.width, canvas.height);
+
+                $('#faze-continue-form').html('<input type="hidden" name="_csrf" value="<%= csrfToken %>"><button class="button button-base"><%= __('validate') %></button>');
+
+                // Socket
+                socket.emit('faze');
+
+                // Pour chaque visage détecté
+                event.data.forEach(function(rect) {
+                    context.strokeStyle = '#ef4f47';
+                    context.lineWidth = 3;
+                    context.strokeRect(rect.x, rect.y, rect.width, rect.height);
+                });
+            }
+        });
+    };
+</script>

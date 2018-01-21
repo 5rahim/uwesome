@@ -1,0 +1,321 @@
+/*-------------------
+      Default
+--------------------*/
+
+.no-margin {
+    margin: 0 !important;
+}
+.no-margin-left {
+    margin-left: 0 !important;
+}
+.no-margin-right {
+    margin-right: 0 !important;
+}
+.no-margin-top {
+    margin-top: 0 !important;
+}
+.no-margin-bottom {
+    margin-bottom: 0 !important;
+}
+
+.no-padding {
+    padding: 0 !important;
+}
+.no-padding-left {
+    padding-left: 0 !important;
+}
+.no-padding-right {
+    padding-right: 0 !important;
+}
+.no-padding-top {
+    padding-top: 0 !important;
+}
+.no-padding-bottom {
+    padding-bottom: 0 !important;
+}
+
+.hide-on-small-only, .hide-on-small-and-down {
+  @media #{$small-and-down} {
+    display: none !important;
+  }
+}
+.hide-on-med-and-down {
+  @media #{$medium-and-down} {
+    display: none !important;
+  }
+}
+.hide-on-med-and-up {
+  @media #{$medium-and-up} {
+    display: none !important;
+  }
+}
+.hide-on-med-only {
+  @media only screen and (min-width: $small-screen) and (max-width: $medium-screen) {
+    display: none !important;
+  }
+}
+.hide-on-large-only {
+  @media #{$large-and-up} {
+    display: none !important;
+  }
+}
+.show-on-large {
+  @media #{$large-and-up} {
+    display: block !important;
+  }
+}
+.show-on-medium {
+  @media only screen and (min-width: $small-screen) and (max-width: $medium-screen) {
+    display: block !important;
+  }
+}
+.show-on-small {
+  @media #{$small-and-down} {
+    display: block !important;
+  }
+}
+.show-on-medium-and-up {
+  @media #{$medium-and-up} {
+    display: block !important;
+  }
+}
+.show-on-medium-and-down {
+  @media #{$medium-and-down} {
+    display: block !important;
+  }
+}
+
+
+// Center text on mobile
+.center-on-small-only {
+  @media #{$small-and-down} {
+    text-align: center;
+  }
+}
+
+
+/*-------------------
+      Container
+--------------------*/
+
+.container {
+  margin: 0 auto;
+  width: $container-small-width;
+
+    &::after {
+        content: ".";
+        display: block;
+        height: 0;
+        clear: both;
+        visibility: hidden;
+    }
+
+  &.container-fluid {
+      width: $container-small-fluid-width !important;
+  }
+}
+@media #{$medium-and-up} {
+  .container {
+    width: $container-medium-width;
+    &.container-fluid {
+        width: $container-medium-fluid-width !important;
+    }
+  }
+}
+@media #{$large-and-up} {
+  .container {
+    width: $container-large-width;
+    &.container-fluid {
+        width: $container-large-fluid-width !important;
+    }
+  }
+}
+
+.container {
+    &.ten-wide {
+        width: 100% !important;
+    }
+    &.nine-wide {
+        width: 100% !important;
+    }
+    &.eight-wide {
+        width: 100% !important;
+    }
+    &.seven-wide {
+        width: 100% !important;
+    }
+    &.six-wide {
+        width: 100% !important;
+    }
+    &.five-wide {
+        width: 100% !important;
+    }
+    &.four-wide {
+        width: 100% !important;
+    }
+    &.three-wide {
+        width: 100% !important;
+    }
+    &.two-wide {
+        width: 100% !important;
+    }
+    &.one-wide {
+        width: 100% !important;
+    }
+    @media #{$medium-and-up} {
+        &.ten-wide {
+            width: 100% !important;
+        }
+        &.nine-wide {
+            width: 90% !important;
+        }
+        &.eight-wide {
+            width: 80% !important;
+        }
+        &.seven-wide {
+            width: 70% !important;
+        }
+        &.six-wide {
+            width: 60% !important;
+        }
+        &.five-wide {
+            width: 50% !important;
+        }
+        &.four-wide {
+            width: 40% !important;
+        }
+        &.three-wide {
+            width: 30% !important;
+        }
+        &.two-wide {
+            width: 20% !important;
+        }
+        &.one-wide {
+            width: 10% !important;
+        }
+    }
+}
+
+/*-------------------
+        Grid
+--------------------*/
+
+@mixin reset-offset {
+  margin-left: auto;
+  left: auto;
+  right: auto;
+}
+@mixin grid-classes($size, $i, $perc) {
+  &.offset-#{$size}-#{$i} {
+    margin-left: $perc;
+  }
+  &.pull-#{$size}-#{$i} {
+    right: $perc;
+  }
+  &.push-#{$size}-#{$i} {
+    left: $perc;
+  }
+}
+
+.grid {
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 20px;
+    position: relative;
+
+  // Clear floating children
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+
+  .column {
+    float: left;
+    box-sizing: border-box;
+    padding: 0 $gutter-width / 2;
+    min-height: 1px;
+
+    &[class*="push-"],
+    &[class*="pull-"] {
+      position: relative;
+    }
+
+    $i: 1;
+    @while $i <= $num-cols {
+      $perc: unquote((100 / ($num-cols / $i)) + "%");
+      &.small-#{$i} {
+        width: $perc;
+        @include reset-offset;
+      }
+      $i: $i + 1;
+    }
+
+    $i: 1;
+    @while $i <= $num-cols {
+      $perc: unquote((100 / ($num-cols / $i)) + "%");
+      @include grid-classes("small-", $i, $perc);
+      $i: $i + 1;
+    }
+
+    @media #{$medium-and-up} {
+
+      $i: 1;
+      @while $i <= $num-cols {
+        $perc: unquote((100 / ($num-cols / $i)) + "%");
+        &.medium-#{$i} {
+          width: $perc;
+          @include reset-offset;
+        }
+        $i: $i + 1
+      }
+
+      $i: 1;
+      @while $i <= $num-cols {
+        $perc: unquote((100 / ($num-cols / $i)) + "%");
+        @include grid-classes("medium-", $i, $perc);
+        $i: $i + 1;
+      }
+    }
+
+    @media #{$large-and-up} {
+
+      $i: 1;
+      @while $i <= $num-cols {
+        $perc: unquote((100 / ($num-cols / $i)) + "%");
+        &.large-#{$i} {
+          width: $perc;
+          @include reset-offset;
+        }
+        $i: $i + 1;
+      }
+
+      $i: 1;
+      @while $i <= $num-cols {
+        $perc: unquote((100 / ($num-cols / $i)) + "%");
+        @include grid-classes("large-", $i, $perc);
+        $i: $i + 1;
+      }
+    }
+
+    @media #{$extra-large-and-up} {
+
+      $i: 1;
+      @while $i <= $num-cols {
+        $perc: unquote((100 / ($num-cols / $i)) + "%");
+        &.extralarge-#{$i} {
+          width: $perc;
+          @include reset-offset;
+        }
+        $i: $i + 1;
+      }
+
+      $i: 1;
+      @while $i <= $num-cols {
+        $perc: unquote((100 / ($num-cols / $i)) + "%");
+        @include grid-classes("extralarge-", $i, $perc);
+        $i: $i + 1;
+      }
+    }
+  }
+}

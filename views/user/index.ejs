@@ -1,0 +1,106 @@
+<% include ../partials/header.ejs %>
+
+<% include ../partials/topbar.ejs %>
+
+<div>
+    <div>
+        <div>
+            <div>
+                <div class="profile-head" style="<%= profileGradient %>">
+
+                    <!-- Si c'est mon profil -->
+                    <% if(isCurrentUserProfile) { %>
+
+                    <div class="profile-cover">
+                        <div class="profile-cover-edit">
+                            <i data-feather="edit" width="30" height="30"></i>
+                        </div>
+                    </div>
+
+                    <% } %>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+
+    <div class="grid">
+
+        <div class="profile-informations">
+
+            <div class="profile-avatar" style="background-image: url('/images/<%= user.avatar %>')"></div>
+            <div class="profile-infos">
+                <span class="profile-username"><%= pUser.username %></span>
+                <div class="profile-date"><%= __('member.since') %> <strong><span id="profileTimeAgo" datetime="<%= pUser.created_at %>"></span></strong></div>
+            </div>
+
+            <!-- Si ce n'est pas mon profil -->
+            <% if(!isCurrentUserProfile) { %>
+
+            <div class="profile-plus">
+                <button class="button button-option" data-func="request-friend" data-request-state="no" data-gd='{"targetToken": "<%= pUser.token %>"}'><i data-feather="user-plus" class="user-add-icon" width="13" height="13"></i> <%= __('ask.friend') %></button>
+            </div>
+
+            <% } %>
+
+        </div>
+
+    </div>
+
+    <div class="grid profile-content">
+
+        <div class="column medium-4">
+
+        </div>
+
+        <div class="column medium-8">
+
+            <div class="profile-right">
+                <div>
+                    <div>
+
+                        <div class="profile-tabs">
+                            <ul>
+                                <li class="selected">Publications</li>
+                                <li>Amis</li>
+                                <li>Photos</li>
+                                <li>Rooms</li>
+                            </ul>
+                        </div>
+
+                        <div class="profile-in">
+                            <div>
+                                <div>
+
+                                    <div class="profile-timeline" id="profileTimeline">
+
+                                        <% if(isCurrentUserProfile) { %>
+
+                                        <div class="profile-action">
+                                            <form method="post" action="post">
+
+                                            </form>
+                                        </div>
+
+                                        <% } %>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<% include ../partials/footer.ejs %>

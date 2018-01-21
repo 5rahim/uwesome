@@ -1,0 +1,50 @@
+<script>
+    feather.replace();
+    feather.icons.x.toSvg({ class: 'user-add-icon', 'stroke-width': 1, color: 'red' });
+</script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="/logic/jquery.min.js"></script>
+<script src="/timeago.js/dist/timeago.js"></script>
+<script src="/timeago.js/dist/timeago.locales.min.js"></script>
+
+<!-- variables -->
+<% if(req.session.user) { %>
+<script>
+    const user_token = '<%= user.token %>';
+    console.log(user_token);
+</script>
+<% } %>
+
+<!-- main -->
+<script src="/logic/Main.js"></script>
+
+<!-- profile -->
+<% if(pageTitle == 'profile %s') { %>
+<script>
+
+    var timeagoInstance = timeago();
+    Main.timeAgo(timeagoInstance, '<%= req.cookies.ilang %>');
+
+</script>
+<script>
+
+    var lang = '<%= req.cookies.ilang %>';
+    Main.requestFriendButton(lang, feather);
+
+</script>
+<% } %>
+
+<!-- for all -->
+<script>
+    Main.welcomeAnimation();
+</script>
+
+<!-- online -->
+<% if(req.session.user) { %>
+<script>
+    Main.requestFriend(socket, user_token)
+</script>
+<% } %>
+
+</body>
+</html>

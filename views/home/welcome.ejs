@@ -1,0 +1,138 @@
+<% include ../partials/header.ejs %>
+
+<% if(loginErrors.length > 0) {
+    var lErrors = loginErrors;
+} %>
+
+<div class="landing">
+
+    <div>
+        <div>
+            <div style="position: absolute; bottom: 0; ">
+                <img src="/images/image_bottom_01.png" class="landing-bottom" alt="">
+            </div>
+        </div>
+    </div>
+    <!--<img src="/images/image_people_02.png" class="landing-people" alt="">-->
+
+    <div class="landing-auth grid">
+
+        <div class="column small-12 medium-6">
+            <img src="/images/logo_big_type3.png" alt="" class="landing-logo">
+            <div class="landing-presentation">
+                <h1><%= __('site.description.normal') %></h1>
+                <p><%= __('site.description.more') %></p>
+                <div class="button button-rounded button-landing"><%= __('read.more') %></div>
+            </div>
+        </div>
+
+        <div class="landing-auth-container column small-12 medium-6">
+            <div class="landing-auth-box">
+                <div class="landing-auth-menu">
+                    <div class="landing-auth-option selected" id="chooseSignup"><%= __('signup') %></div>
+                    <div class="landing-auth-option" id="chooseLogin"><%= __('signin') %></div>
+                </div>
+                <div class="landing-auth-content" id="signup">
+                    <div>
+                        <div>
+                            <% if(errors.length > 0) { %>
+                            <div class="landing-auth-catch">
+                                <div>
+                                    <% for(var i = 0; i < errors.length; i++) { %>
+                                        <li><%= __(errors[i].msg) %></li>
+                                   <% } %>
+                                </div>
+                            </div>
+                            <% } %>
+                        </div>
+                        <div>
+                            <div>
+                                <div>
+                                    <div>
+                                        <div>
+                                            <form action="signup" method="post">
+                                                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                                <input type="text" placeholder="<%= __('username') %>" name="username" class="field" value="<%= req.body.username %>">
+                                                <input type="email" placeholder="<%= __('email') %>" name="email" class="field" value="<%= req.body.email %>">
+                                                <input type="password" placeholder="<%= __('password') %>" name="password" class="field" value="<%= req.body.password %>">
+                                                <input type="password" placeholder="<%= __('passwordcf') %>" name="passwordcf" class="field" value="">
+                                                <button class="button button-base"><%= __('tosignup') %></button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="landing-auth-content" id="login" style="display: none">
+                    <div>
+                        <% if(lErrors) { %>
+                        <div class="landing-auth-catch">
+                            <div>
+                                <% for(var i = 0; i < lErrors.length; i++) { %>
+                                <li><%= __(lErrors[i].msg) %></li>
+                                <% } %>
+                            </div>
+                        </div>
+                        <% } %>
+                    </div>
+                    <div>
+                        <form action="login" method="post">
+                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                            <input type="text" placeholder="<%= __('username') %>" name="username" class="field" value="<%= req.body.username %>">
+                            <input type="password" placeholder="<%= __('password') %>" name="password" class="field" value="<%= req.body.password %>">
+                            <button class="button button-base"><%= __('tologin') %></button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="landing-footer">
+        <div>
+            &copy;2017 Kommunity
+        </div>
+    </div>
+
+</div>
+
+<% include ../partials/footer.ejs %>
+<% if(lErrors) {
+%>
+<script>
+    $(function() {
+        /*
+
+           /^\/^\
+         _|__|  O|
+\/     /~     \_/ \
+ \____|__________/  \
+        \_______      \
+                `\     \                 \
+                  |     |                  \
+                 /      /                    \
+                /     /                       \\
+              /      /                         \ \
+             /     /                            \  \
+           /     /             _----_            \   \
+          /     /           _-~      ~-_         |   |
+         (      (        _-~    _--_    ~-_     _/   |
+          \      ~-____-~    _-~    ~-_    ~-_-~    /
+            ~-_           _-~          ~-_       _-~
+               ~--______-~                ~-___-~
+
+               // 00101100101001
+
+         */
+        //setTimeout(function () {
+            $('#chooseSignup').removeClass('selected');
+            $('#chooseLogin').addClass('selected');
+            $('#signup').hide();
+            $('#login').show();
+        //}, 1000)
+    });
+</script>
+<% } %>
