@@ -21,6 +21,17 @@ var Model = /** @class */ (function () {
             });
         });
     };
+    Model.prototype.countBy = function (key, value) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            DataAccess_1.default.connection.query('SELECT * FROM ' + _this.table + ' WHERE ' + key + ' = ? LIMIT 1', [value], function (err, rows) {
+                if (err)
+                    reject(err);
+                if (rows)
+                    resolve(rows.length);
+            });
+        });
+    };
     Model.prototype.find = function (query, value) {
         var _this = this;
         return new Promise(function (resolve, reject) {

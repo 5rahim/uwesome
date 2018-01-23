@@ -32,6 +32,24 @@ export class Model {
 
     }
 
+    public countBy(key: string, value: any): Promise<object> {
+
+        return new Promise((resolve, reject) => {
+
+            DB.connection.query('SELECT * FROM '+ this.table +' WHERE '+ key +' = ? LIMIT 1', [value], (err, rows) => {
+
+                if(err)
+                    reject(err)
+
+                if(rows)
+                    resolve(rows.length)
+
+            });
+
+        })
+
+    }
+
     public find(query: string, value: any) {
 
         return new Promise((resolve, reject) => {

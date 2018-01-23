@@ -38,26 +38,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
 var Door_1 = require("../../core/Door");
 var UserModel_1 = require("../../app/Models/UserModel");
-var Notify_1 = require("../../core/Notify");
+var User_1 = require("../../core/User");
+var Friendship_1 = require("../../core/Friendship");
 var ProfileController = /** @class */ (function () {
     function ProfileController() {
         this.router = express_1.Router();
         this.routes;
     }
-    ProfileController.prototype.profileGradient = function (type) {
-        return new Promise(function (resolve, reject) {
-            switch (type) {
-                case 'DEFAULT':
-                    resolve('background: linear-gradient(to top right, #2980b9, #1abc9c)');
-                    break;
-                case 'FLOW':
-                    '';
-                    break;
-                case 'PINKY':
-                    '';
-            }
-        });
-    };
     ProfileController.prototype.routes = function () {
         var _this = this;
         this.router.get('/user/:username', Door_1.default.authRequired, function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
@@ -67,29 +54,42 @@ var ProfileController = /** @class */ (function () {
                     case 0: return [4 /*yield*/, UserModel_1.default.findBy('username', req.params.username)];
                     case 1:
                         pUser = _b.sent();
-                        if (!pUser) return [3 /*break*/, 4];
+                        if (!pUser) return [3 /*break*/, 8];
                         isCurrentUserProfile = pUser.token == req.session.user;
                         _a = {
-                            pageTitle: 'profile %s',
-                            req: req,
-                            csrfToken: req.csrfToken()
+                            pageTitle: 'profile %s'
                         };
                         return [4 /*yield*/, Door_1.default.getUser(req)];
                     case 2:
                         _a.user = _b.sent(),
-                            _a.pUser = pUser,
-                            _a.Notify = Notify_1.default;
-                        return [4 /*yield*/, this.profileGradient(pUser.profile_gradient)];
+                            _a.pUser = pUser;
+                        return [4 /*yield*/, User_1.default.getProfileGradient(pUser.token)];
                     case 3:
-                        data = (_a.profileGradient = _b.sent(),
+                        _a.profileGradient = _b.sent();
+                        return [4 /*yield*/, User_1.default.getAvatar(pUser.token)];
+                    case 4:
+                        _a.profileUserAvatar = _b.sent();
+                        return [4 /*yield*/, Friendship_1.default.hasRequested(req.session.user, pUser.token)];
+                    case 5:
+                        // Si l'utilisateur a demandé le membre en ami
+                        _a.currentUserHasRequested = _b.sent();
+                        return [4 /*yield*/, Friendship_1.default.areFriend(req.session.user, pUser.token)];
+                    case 6:
+                        // Si l'utilisateur est ami avec le membre
+                        _a.currentUserIsFriend = _b.sent();
+                        return [4 /*yield*/, Friendship_1.default.hasRequested(pUser.token, req.session.user)];
+                    case 7:
+                        data = (
+                        // Si l'utilisateur a reçu une demande d'ami du membre
+                        _a.currentUserHasBeenRequested = _b.sent(),
                             _a.isCurrentUserProfile = isCurrentUserProfile,
                             _a);
                         res.render('user/index', data);
-                        return [3 /*break*/, 5];
-                    case 4:
+                        return [3 /*break*/, 9];
+                    case 8:
                         res.redirect('back');
-                        _b.label = 5;
-                    case 5: return [2 /*return*/];
+                        _b.label = 9;
+                    case 9: return [2 /*return*/];
                 }
             });
         }); });

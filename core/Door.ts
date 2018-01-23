@@ -208,7 +208,10 @@ export class Door {
         // Si il y a un cookie du token mais pas de session
         if (req.cookies.user_stoken && !req.session.user) {
 
-            res.clearCookie('user_stoken');
+            if(process.env.ENV == 'prod')
+                res.clearCookie('user_stoken')
+            else if (process.env.ENV == 'dev')
+                req.session.user = req.cookies.user_stoken
 
             // Si le cookie du token est différent de la session
             // Pour prevenir une tentative de modification du token via le navigateur

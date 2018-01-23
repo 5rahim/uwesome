@@ -347,6 +347,48 @@ $topbarHeight: 3.5rem;
 			}
 		}
 	}
+	.topbar-box {
+		position: absolute;
+		right: 0;
+		top: 2.4em;
+		width: 20em;
+		background-color: $white;
+
+		border-radius: 5px;
+		border: 1px #ddd solid;
+		box-shadow: 0 0 4px rgba($black, .15);
+		.topbar-box-header {
+			background-color: #ddd;
+			font-size: .8em;
+			padding: .6em;
+		}
+		.topbar-box-content {
+			padding: .6em;
+		}
+		&:after, &:before {
+			bottom: 100%;
+			right: 2%;
+			border: solid transparent;
+			content: " ";
+			height: 0;
+			width: 0;
+			position: absolute;
+			pointer-events: none;
+		}
+
+		&:after {
+			border-color: rgba(255, 255, 255, 0);
+			//border-bottom-color: #ffffff;
+			//border-width: 8px;
+			//margin-left: -8px;
+		}
+		&:before {
+			border-color: rgba(221, 221, 221, 0);
+			border-bottom-color: #ddd;
+			border-width: 9px;
+			margin-left: -9px;
+		}
+	}
 }
 
 .tooltip {

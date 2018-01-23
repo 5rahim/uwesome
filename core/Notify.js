@@ -40,20 +40,36 @@ var Notify = /** @class */ (function () {
     function Notify() {
     }
     // Si l'utilisateur a reçu des requêtes d'ami
-    Notify.prototype.hasFriendRequests = function (req) {
-        return __awaiter(this, void 0, void 0, function () {
+    Notify.prototype.hasUnreadFriendRequests = function (req) {
+        var _this = this;
+        return new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
             var getFriendshipRequests;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, FriendshipRequestsModel_1.default.findBy('target_token', req.session.user)];
                     case 1:
                         getFriendshipRequests = _a.sent();
-                        return [2 /*return*/, getFriendshipRequests ? true : false];
+                        getFriendshipRequests ? resolve(true) : resolve(false);
+                        return [2 /*return*/];
                 }
             });
-        });
+        }); });
     };
-    Notify.prototype.countFriendRequests = function (req) {
+    // Obtenir le nombre de demandes d'amis
+    Notify.prototype.countUnreadFriendRequests = function (req) {
+        var _this = this;
+        return new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
+            var getFriendshipRequestsCount;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, FriendshipRequestsModel_1.default.countBy('target_token', req.session.user)];
+                    case 1:
+                        getFriendshipRequestsCount = _a.sent();
+                        resolve(getFriendshipRequestsCount);
+                        return [2 /*return*/];
+                }
+            });
+        }); });
     };
     return Notify;
 }());

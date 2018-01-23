@@ -26,9 +26,19 @@
                         <div class="topbar-icons">
                             <ul>
                                 <li><i data-feather="users"></i>
-                                    <% if(Notify.hasFriendRequests(req)) { %>
-                                    <span class="badge">1</span>
-                                    <% } %>
+                                    <span id="friendRequestsBubble">
+                                        <% if(currentUserHasUnreadFriendRequests) { %>
+                                        <span class="badge"><%= currentUserUnreadFriendRequestsCount %></span>
+                                        <% } %>
+                                    </span>
+                                    <div class="topbar-box" id="friendRequestsBox">
+                                        <div class="topbar-box-header">Demandes d'ami</div>
+                                        <div class="topbar-box-content">
+                                            <ul>
+                                                <li></li>
+                                            </ul>
+                                        </div>
+                                    </div>
                                 </li>
                                 <li><i data-feather="bell"></i></li>
                                 <li><i data-feather="message-square"></i></li>
@@ -44,7 +54,7 @@
 
                         <div class="topbar-user">
                             <a href="/user/<%= user.username %>">
-                                <div class="topbar-user-profile-picture" style="background-image: url('/images/<%= user.avatar %>')"></div>
+                                <div class="topbar-user-profile-picture" style="<%= currentUserAvatar %>"></div>
                                 <div class="topbar-user-username"><%= user.username %></div>
                             </a>
                         </div>

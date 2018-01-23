@@ -35,67 +35,65 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var express_1 = require("express");
-var Door_1 = require("../../core/Door");
-var HomeController = /** @class */ (function () {
-    function HomeController() {
-        this.router = express_1.Router();
-        this.routes;
+var UserModel_1 = require("../app/Models/UserModel");
+var User = /** @class */ (function () {
+    function User() {
     }
-    // Rendre la page Welcome
-    HomeController.prototype.renderWelcome = function (req, res) {
-        var data = {
-            pageTitle: 'welcome',
-            errors: '',
-            loginErrors: ''
-        };
-        res.render('home/welcome', data);
-    };
-    HomeController.prototype.routes = function () {
+    User.prototype.getProfileGradient = function (userToken) {
         var _this = this;
-        // Page accueil
-        this.router.get('/', Door_1.default.authRequired, function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
-            var data, _a;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+        return new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
+            var token, user, type;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
                     case 0:
-                        _a = {
-                            pageTitle: 'home'
-                        };
-                        return [4 /*yield*/, Door_1.default.getUser(req)];
+                        token = userToken ? userToken : '';
+                        return [4 /*yield*/, UserModel_1.default.findBy('token', token)];
                     case 1:
-                        data = (_a.user = _b.sent(),
-                            _a);
-                        res.render('home/index', data);
+                        user = _a.sent();
+                        type = user.profile_gradient;
+                        switch (type) {
+                            case 'DEFAULT':
+                                resolve('background: linear-gradient(to top right, #2980b9, #1abc9c)');
+                                break;
+                            case 'FLOW':
+                                '';
+                                break;
+                            case 'PINKY':
+                                '';
+                        }
                         return [2 /*return*/];
                 }
             });
         }); });
-        this.router.post('/signup', function (req, res, next) {
-            Door_1.default.register(req, res);
-        });
-        this.router.post('/login', function (req, res, next) {
-            Door_1.default.login(req, res);
-        });
-        this.router.post('/validation', function (req, res, next) {
-            Door_1.default.validate(req, res);
-        });
-        this.router.get('/logout', function (req, res, next) {
-            Door_1.default.logout(req, res);
-        });
-        this.router.get('/welcome', Door_1.default.noAuthRequired, function (req, res, next) {
-            _this.renderWelcome(req, res);
-        });
-        this.router.get('/signup', function (req, res, next) {
-            res.redirect('welcome');
-        });
-        this.router.get('/login', function (req, res, next) {
-            res.redirect('welcome');
-        });
     };
-    return HomeController;
+    User.prototype.getAvatar = function (user_token) {
+        var _this = this;
+        var token = user_token ? user_token : '';
+        return new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
+            var user;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, UserModel_1.default.findBy('token', token)
+                        // Si il existe
+                    ];
+                    case 1:
+                        user = _a.sent();
+                        // Si il existe
+                        if (user)
+                            if (user.avatar == 'DEFAULT') {
+                                resolve('background: linear-gradient(to top right, #b5b5b5, #dedede)');
+                            }
+                            else {
+                                resolve('background-image: url(/images/' + user.avatar + ')');
+                            }
+                        else
+                            resolve('');
+                        return [2 /*return*/];
+                }
+            });
+        }); });
+    };
+    return User;
 }());
-exports.HomeController = HomeController;
-var HomeRoutes = new HomeController();
-HomeRoutes.routes();
-exports.default = HomeRoutes.router;
+exports.User = User;
+exports.default = new User;

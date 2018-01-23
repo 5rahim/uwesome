@@ -36,44 +36,50 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var FriendshipRequestsModel_1 = require("../app/Models/FriendshipRequestsModel");
-var Helpers_1 = require("./Helpers");
-var crypto = require('crypto');
+var FriendshipModel_1 = require("../app/Models/FriendshipModel");
 var Friendship = /** @class */ (function () {
     function Friendship() {
     }
-    Friendship.prototype.initialize = function (io) {
+    // Si l'utilisateur a demandé un membre en ami
+    Friendship.prototype.hasRequested = function (token, target) {
         var _this = this;
-        io.sockets.on('connection', function (socket) {
-            // Friend Requests
-            socket.on('friend-request', function (data) { return __awaiter(_this, void 0, void 0, function () {
-                var getFriendRequest, input;
-                return __generator(this, function (_a) {
-                    switch (_a.label) {
-                        case 0: return [4 /*yield*/, FriendshipRequestsModel_1.default.find('WHERE user_token = ? AND target_token = ?', [data.user_token, data.gd.targetToken])
-                            // L'utilisateur n'a pas encore envoyé de demande d'ami
-                        ];
-                        case 1:
-                            getFriendRequest = _a.sent();
-                            // L'utilisateur n'a pas encore envoyé de demande d'ami
-                            if (!getFriendRequest) {
-                                input = {
-                                    token: crypto.createHmac('sha256', 'friendship')
-                                        .update(data.user_token + data.gd.targetToken + Helpers_1.default.getDateTime()).digest('hex'),
-                                    user_token: data.user_token,
-                                    target_token: data.gd.targetToken,
-                                    request_date: Helpers_1.default.getDateTime()
-                                };
-                                FriendshipRequestsModel_1.default.save(input);
-                                // Si l'utilisateur a déjà envoyé une demande d'ami
-                            }
-                            else {
-                                console.log('friend request already sent');
-                            }
-                            return [2 /*return*/];
-                    }
-                });
-            }); });
-        });
+        return new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
+            var hasRequested;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!(token && target)) return [3 /*break*/, 2];
+                        return [4 /*yield*/, FriendshipRequestsModel_1.default.find('WHERE user_token = ? AND target_token = ?', [token, target])];
+                    case 1:
+                        hasRequested = _a.sent();
+                        hasRequested ? resolve(true) : resolve(false);
+                        return [3 /*break*/, 3];
+                    case 2:
+                        resolve(false);
+                        _a.label = 3;
+                    case 3: return [2 /*return*/];
+                }
+            });
+        }); });
+    };
+    // Si deux utilisateurs sont amis
+    Friendship.prototype.areFriend = function (token, friend) {
+        var _this = this;
+        return new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
+            var hasRequested;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!(token && friend)) return [3 /*break*/, 2];
+                        return [4 /*yield*/, FriendshipModel_1.default.find('WHERE user_token = ? AND friend_token = ?', [token, friend])];
+                    case 1:
+                        hasRequested = _a.sent();
+                        hasRequested ? resolve(true) : resolve(false);
+                        _a.label = 2;
+                    case 2: return [2 /*return*/];
+                }
+            });
+        }); });
     };
     return Friendship;
 }());

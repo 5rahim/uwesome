@@ -35,67 +35,39 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var express_1 = require("express");
-var Door_1 = require("../../core/Door");
-var HomeController = /** @class */ (function () {
-    function HomeController() {
-        this.router = express_1.Router();
-        this.routes;
+var Notify_1 = require("./core/Notify");
+var User_1 = require("./core/User");
+var Locals = /** @class */ (function () {
+    function Locals() {
     }
-    // Rendre la page Welcome
-    HomeController.prototype.renderWelcome = function (req, res) {
-        var data = {
-            pageTitle: 'welcome',
-            errors: '',
-            loginErrors: ''
-        };
-        res.render('home/welcome', data);
-    };
-    HomeController.prototype.routes = function () {
+    Locals.prototype.init = function (app) {
         var _this = this;
-        // Page accueil
-        this.router.get('/', Door_1.default.authRequired, function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
-            var data, _a;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+        app.use(function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
+            var _a, _b, _c;
+            return __generator(this, function (_d) {
+                switch (_d.label) {
                     case 0:
-                        _a = {
-                            pageTitle: 'home'
-                        };
-                        return [4 /*yield*/, Door_1.default.getUser(req)];
+                        _a = res.locals;
+                        return [4 /*yield*/, Notify_1.default.hasUnreadFriendRequests(req)];
                     case 1:
-                        data = (_a.user = _b.sent(),
-                            _a);
-                        res.render('home/index', data);
+                        _a.currentUserHasUnreadFriendRequests = _d.sent();
+                        _b = res.locals;
+                        return [4 /*yield*/, Notify_1.default.countUnreadFriendRequests(req)];
+                    case 2:
+                        _b.currentUserUnreadFriendRequestsCount = _d.sent();
+                        _c = res.locals;
+                        return [4 /*yield*/, User_1.default.getAvatar(req.session.user)];
+                    case 3:
+                        _c.currentUserAvatar = _d.sent();
+                        res.locals.req = req;
+                        res.locals.csrfToken = req.csrfToken();
+                        next();
                         return [2 /*return*/];
                 }
             });
         }); });
-        this.router.post('/signup', function (req, res, next) {
-            Door_1.default.register(req, res);
-        });
-        this.router.post('/login', function (req, res, next) {
-            Door_1.default.login(req, res);
-        });
-        this.router.post('/validation', function (req, res, next) {
-            Door_1.default.validate(req, res);
-        });
-        this.router.get('/logout', function (req, res, next) {
-            Door_1.default.logout(req, res);
-        });
-        this.router.get('/welcome', Door_1.default.noAuthRequired, function (req, res, next) {
-            _this.renderWelcome(req, res);
-        });
-        this.router.get('/signup', function (req, res, next) {
-            res.redirect('welcome');
-        });
-        this.router.get('/login', function (req, res, next) {
-            res.redirect('welcome');
-        });
     };
-    return HomeController;
+    return Locals;
 }());
-exports.HomeController = HomeController;
-var HomeRoutes = new HomeController();
-HomeRoutes.routes();
-exports.default = HomeRoutes.router;
+exports.Locals = Locals;
+exports.default = new Locals;

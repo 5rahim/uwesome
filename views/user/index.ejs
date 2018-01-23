@@ -31,7 +31,7 @@
 
         <div class="profile-informations">
 
-            <div class="profile-avatar" style="background-image: url('/images/<%= user.avatar %>')"></div>
+            <div class="profile-avatar" style="<%= profileUserAvatar %>"></div>
             <div class="profile-infos">
                 <span class="profile-username"><%= pUser.username %></span>
                 <div class="profile-date"><%= __('member.since') %> <strong><span id="profileTimeAgo" datetime="<%= pUser.created_at %>"></span></strong></div>
@@ -41,7 +41,14 @@
             <% if(!isCurrentUserProfile) { %>
 
             <div class="profile-plus">
-                <button class="button button-option" data-func="request-friend" data-request-state="no" data-gd='{"targetToken": "<%= pUser.token %>"}'><i data-feather="user-plus" class="user-add-icon" width="13" height="13"></i> <%= __('ask.friend') %></button>
+                <!-- afficher l'etat et le texte du button lors d'un rechargement dynamiquement  -->
+                <% if(!currentUserIsFriend && !currentUserHasBeenRequested) { %>
+                <button class="button button-option" data-func="request-friend" data-request-state="no" data-gd='{"targetToken": "<%= pUser.token %>"}'><i data-feather="user-plus" width="13" height="13"></i> <%= __('ask.friend') %></button>
+                <% } else if (currentUserIsFriend) { %>
+                <button class="button button-option" data-func="delete-friend" data-request-state="no" data-gd='{"targetToken": "<%= pUser.token %>"}'><i data-feather="user-minus" width="13" height="13"></i> <%= __('delete.friend') %></button>
+                <% } else if (currentUserHasBeenRequested) { %>
+                <span>Ce membre vous a demandé en ami</span>
+                <% } %>
             </div>
 
             <% } %>

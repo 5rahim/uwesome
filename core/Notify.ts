@@ -3,17 +3,28 @@ import FriendshipRequestsModel from "../app/Models/FriendshipRequestsModel";
 export class Notify {
 
     // Si l'utilisateur a reçu des requêtes d'ami
-    public async hasFriendRequests(req) {
+    public hasUnreadFriendRequests(req){
 
-            const getFriendshipRequests = await FriendshipRequestsModel.findBy('target_token', req.session.user);
+            return new Promise( async (resolve, reject) => {
 
-            return getFriendshipRequests ? true : false
+                const getFriendshipRequests = await FriendshipRequestsModel.findBy('target_token', req.session.user)
+
+                getFriendshipRequests ? resolve(true) : resolve(false)
+
+            })
 
     }
 
-   public countFriendRequests(req) {
+    // Obtenir le nombre de demandes d'amis
+   public countUnreadFriendRequests(req) {
 
+       return new Promise( async (resolve, reject) => {
 
+           const getFriendshipRequestsCount = await FriendshipRequestsModel.countBy('target_token', req.session.user)
+
+           resolve(getFriendshipRequestsCount)
+
+       })
 
    }
 

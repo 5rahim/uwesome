@@ -35,67 +35,47 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var express_1 = require("express");
-var Door_1 = require("../../core/Door");
-var HomeController = /** @class */ (function () {
-    function HomeController() {
-        this.router = express_1.Router();
-        this.routes;
+var FriendshipRequestsModel_1 = require("../app/Models/FriendshipRequestsModel");
+var Helpers_1 = require("./Helpers");
+var crypto = require('crypto');
+var FriendRequests = /** @class */ (function () {
+    function FriendRequests() {
     }
-    // Rendre la page Welcome
-    HomeController.prototype.renderWelcome = function (req, res) {
-        var data = {
-            pageTitle: 'welcome',
-            errors: '',
-            loginErrors: ''
-        };
-        res.render('home/welcome', data);
-    };
-    HomeController.prototype.routes = function () {
+    FriendRequests.prototype.initialize = function (io) {
         var _this = this;
-        // Page accueil
-        this.router.get('/', Door_1.default.authRequired, function (req, res, next) { return __awaiter(_this, void 0, void 0, function () {
-            var data, _a;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0:
-                        _a = {
-                            pageTitle: 'home'
-                        };
-                        return [4 /*yield*/, Door_1.default.getUser(req)];
-                    case 1:
-                        data = (_a.user = _b.sent(),
-                            _a);
-                        res.render('home/index', data);
-                        return [2 /*return*/];
-                }
-            });
-        }); });
-        this.router.post('/signup', function (req, res, next) {
-            Door_1.default.register(req, res);
-        });
-        this.router.post('/login', function (req, res, next) {
-            Door_1.default.login(req, res);
-        });
-        this.router.post('/validation', function (req, res, next) {
-            Door_1.default.validate(req, res);
-        });
-        this.router.get('/logout', function (req, res, next) {
-            Door_1.default.logout(req, res);
-        });
-        this.router.get('/welcome', Door_1.default.noAuthRequired, function (req, res, next) {
-            _this.renderWelcome(req, res);
-        });
-        this.router.get('/signup', function (req, res, next) {
-            res.redirect('welcome');
-        });
-        this.router.get('/login', function (req, res, next) {
-            res.redirect('welcome');
+        io.sockets.on('connection', function (socket) {
+            // Friend Requests
+            socket.on('friend-request', function (data) { return __awaiter(_this, void 0, void 0, function () {
+                var getFriendRequest, input;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4 /*yield*/, FriendshipRequestsModel_1.default.find('WHERE user_token = ? AND target_token = ?', [data.user_token, data.gd.targetToken])
+                            // L'utilisateur n'a pas encore envoyé de demande d'ami
+                        ];
+                        case 1:
+                            getFriendRequest = _a.sent();
+                            // L'utilisateur n'a pas encore envoyé de demande d'ami
+                            if (!getFriendRequest) {
+                                input = {
+                                    token: crypto.createHmac('sha256', 'friendship')
+                                        .update(data.user_token + data.gd.targetToken + Helpers_1.default.getDateTime()).digest('hex'),
+                                    user_token: data.user_token,
+                                    target_token: data.gd.targetToken,
+                                    request_date: Helpers_1.default.getDateTime()
+                                };
+                                FriendshipRequestsModel_1.default.save(input);
+                                // Si l'utilisateur a déjà envoyé une demande d'ami
+                            }
+                            else {
+                                console.log('friend request already sent');
+                            }
+                            return [2 /*return*/];
+                    }
+                });
+            }); });
         });
     };
-    return HomeController;
+    return FriendRequests;
 }());
-exports.HomeController = HomeController;
-var HomeRoutes = new HomeController();
-HomeRoutes.routes();
-exports.default = HomeRoutes.router;
+exports.FriendRequests = FriendRequests;
+exports.default = new FriendRequests;

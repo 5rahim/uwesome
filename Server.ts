@@ -21,6 +21,7 @@ import Routes from "./app/Routes";
 import I18n from './core/i18n';
 import Door from './core/Door';
 import server = require("socket.io");
+import Locals from "./Locals";
 
 // Process ENV
 process.env.BASE = __dirname + '/';
