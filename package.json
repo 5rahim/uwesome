@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "nodemon index.js",
-    "test": "mocha"
+    "test": "mocha",
+    "sass": "cd assets/styles sass --watch scss:css"
   },
   "author": "bonfohzaki",
   "license": "ISC",

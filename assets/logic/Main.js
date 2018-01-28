@@ -1,6 +1,9 @@
 var MainClass = /** @class */ (function () {
     function MainClass() {
     }
+    MainClass.prototype.init = function (socket, token) {
+        socket.emit('init', token);
+    };
     MainClass.prototype.timeAgo = function (timeagoInstance, lang) {
         timeagoInstance.render($('#profileTimeAgo'), lang);
     };
@@ -58,7 +61,7 @@ var MainClass = /** @class */ (function () {
             $('#signup').show();
         });
     };
-    MainClass.prototype.requestFriend = function (socket, user_token) {
+    MainClass.prototype.requestFriend = function (socket, token, lang) {
         var requestFriendButton = $('[data-func="request-friend"]');
         var requestFriendState = requestFriendButton.data('request-state');
         requestFriendButton.click(function () {
@@ -67,7 +70,7 @@ var MainClass = /** @class */ (function () {
             // Si aucune demande n'a été envoyée
             if (requestFriendState == 'no') {
                 requestFriendState = 'pending';
-                socket.emit('friend-request', { gd: data, user_token: user_token });
+                socket.emit('friend-request', { gd: data, user_token: token });
                 // Si une demande est en cours
             }
             else if (requestFriendState == 'pending') {
@@ -76,9 +79,73 @@ var MainClass = /** @class */ (function () {
             }
         });
     };
+    MainClass.prototype.displayFriendRequests = function (socket, token, timeagoInstance, lang) {
+        var langTemplate = function (sentence, lang) {
+            if (sentence == 'no.friend.request')
+                return lang == 'fr' ? 'Aucune demande d\'ami' : 'No friend request';
+            if (sentence == 'loading')
+                return lang == 'fr' ? 'Chargement...' : 'Loading...';
+            if (sentence == 'request.made')
+                return lang == 'fr' ? 'Demande faite' : 'Request sent';
+        };
+        var loading = function () {
+            return ('<div class="topbar-box-loading">' + langTemplate('loading', lang) + '</div>');
+        };
+        // Clic
+        var friendRequestsIcon = $('#friendRequestsIcon');
+        var loadingState = friendRequestsIcon.data('loading-state');
+        // Lors du clic
+        friendRequestsIcon.click(function () {
+            // Si les demandes n'ont pas été chargées
+            if (loadingState == 'no') {
+                // On affiche le loader
+                $('#friendRequestsDisplay').html(loading());
+                // On affiche la box
+                $('#friendRequestsBox').fadeIn(200);
+                // On change le state
+                friendRequestsIcon.attr('data-loading-state', 'loaded');
+                loadingState = 'loaded';
+                setTimeout(function () {
+                    // On demande a obtenir les demandes
+                    socket.emit('catch-friend-requests', token);
+                }, 500);
+            }
+            else if (loadingState == 'loaded') {
+                // Si les demandes sont chargées
+                $('#friendRequestsBox').fadeToggle(200);
+            }
+        });
+        var template = function (data) {
+            return ('<div class="chips">\
+                    <div class="chips-in">\
+                        <div class="chips-image" style="' + data.emitter.avatar + '"></div>\
+                        <a href="/user/' + data.emitter.username + '" class="chips-title" title="Voir le profil de ' + data.emitter.username + '">' + data.emitter.username + '</a>\
+                        <span class="chips-text">' + langTemplate('request.made', lang) + ' <span class="timeAgo" datetime="' + data.friendRequest.request_date + '">...</span></span>\
+                        <div class="chips-choice">\
+                            <button class="button button-chips button-chips-colored" data-gd=\'{ "token" : "' + data.emitter.token + '" }\'>Accepter</button>\
+                            <button class="button button-chips button-chips-default">Refuser</button>\
+                        </div>\
+                    </div>\
+                </div>');
+        };
+        var template2 = function () {
+            return ('<div class="topbar-box-message">' + langTemplate('no.friend.request', lang) + '</div>');
+        };
+        socket.on('before-display-friend-requests', function (data) {
+            $('#friendRequestsDisplay').html('');
+            socket.emit('get-friend-requests', data);
+        });
+        // Si il y a des demandes d'ami
+        socket.on('display-friend-request', function (data) {
+            $('#friendRequestsDisplay').append(template(data));
+            timeagoInstance.render($('.timeAgo'), lang);
+        });
+        // Si il n'y a pas de demandes d'ami
+        socket.on('no-friend-request', function () {
+            $('#friendRequestsDisplay').html('');
+            $('#friendRequestsDisplay').html(template2());
+        });
+    };
     return MainClass;
 }());
 var Main = new MainClass;
-var io;
-var url = 'http://127.0.0.1:4003';
-var socket = io.connect(url);

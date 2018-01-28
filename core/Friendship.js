@@ -37,9 +37,126 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var FriendshipRequestsModel_1 = require("../app/Models/FriendshipRequestsModel");
 var FriendshipModel_1 = require("../app/Models/FriendshipModel");
+var Helpers_1 = require("./Helpers");
+var UserModel_1 = require("../app/Models/UserModel");
+var DataAccess_1 = require("./DataAccess");
+var User_1 = require("./User");
+var crypto = require('crypto');
 var Friendship = /** @class */ (function () {
     function Friendship() {
+        this.friendshipRequestsTable = "friendship_requests";
+        this.friendshipTable = "friendship";
     }
+    Friendship.prototype.initialize = function (io) {
+        var _this = this;
+        io.sockets.on('connection', function (socket) {
+            // Friend Requests
+            socket.on('friend-request', function (data) { return __awaiter(_this, void 0, void 0, function () {
+                var getFriendRequest, input;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0: return [4 /*yield*/, FriendshipRequestsModel_1.default.find('WHERE user_token = ? AND target_token = ?', [data.user_token, data.gd.targetToken])
+                            // L'utilisateur n'a pas encore envoyé de demande d'ami
+                        ];
+                        case 1:
+                            getFriendRequest = _a.sent();
+                            // L'utilisateur n'a pas encore envoyé de demande d'ami
+                            if (!getFriendRequest) {
+                                input = {
+                                    token: crypto.createHmac('sha256', 'friendship')
+                                        .update(data.user_token + data.gd.targetToken + Helpers_1.default.getDateTime()).digest('hex'),
+                                    user_token: data.user_token,
+                                    target_token: data.gd.targetToken,
+                                    request_date: Helpers_1.default.getDateTime()
+                                };
+                                FriendshipRequestsModel_1.default.save(input);
+                                // Si l'utilisateur a déjà envoyé une demande d'ami
+                            }
+                            else {
+                                console.log('friend request already sent');
+                            }
+                            return [2 /*return*/];
+                    }
+                });
+            }); });
+            socket.on('catch-friend-requests', function (token) {
+                // Recupérer les demandes d'amis
+                DataAccess_1.default.connection.query('SELECT * FROM ' + _this.friendshipRequestsTable + ' WHERE target_token = ?', [token], function (err, rows) { return __awaiter(_this, void 0, void 0, function () {
+                    var _a, _b, _i, i, emitter, emitterData, _c;
+                    return __generator(this, function (_d) {
+                        switch (_d.label) {
+                            case 0:
+                                if (!(rows.length > 0)) return [3 /*break*/, 6];
+                                _a = [];
+                                for (_b in rows)
+                                    _a.push(_b);
+                                _i = 0;
+                                _d.label = 1;
+                            case 1:
+                                if (!(_i < _a.length)) return [3 /*break*/, 5];
+                                i = _a[_i];
+                                return [4 /*yield*/, UserModel_1.default.findBy('token', rows[i].user_token)];
+                            case 2:
+                                emitter = _d.sent();
+                                _c = {
+                                    username: emitter.username,
+                                    token: emitter.token
+                                };
+                                return [4 /*yield*/, User_1.default.getAvatar(emitter.token)];
+                            case 3:
+                                emitterData = (_c.avatar = _d.sent(),
+                                    _c);
+                                socket.emit('before-display-friend-requests', { friendRequest: rows[i], emitter: emitterData });
+                                _d.label = 4;
+                            case 4:
+                                _i++;
+                                return [3 /*break*/, 1];
+                            case 5: return [3 /*break*/, 7];
+                            case 6:
+                                socket.emit('no-friend-request');
+                                _d.label = 7;
+                            case 7: return [2 /*return*/];
+                        }
+                    });
+                }); });
+            });
+            socket.on('get-friend-requests', function (data) {
+                socket.emit('display-friend-request', data);
+            });
+        });
+    };
+    // Si l'utilisateur a reçu des requêtes d'ami
+    Friendship.prototype.hasUnreadFriendRequests = function (token) {
+        var _this = this;
+        return new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
+            var getFriendshipRequests;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, FriendshipRequestsModel_1.default.find('WHERE target_token = ? AND viewed  = ?', [token, 0])];
+                    case 1:
+                        getFriendshipRequests = _a.sent();
+                        getFriendshipRequests ? resolve(true) : resolve(false);
+                        return [2 /*return*/];
+                }
+            });
+        }); });
+    };
+    // Obtenir le nombre de demandes d'amis
+    Friendship.prototype.countUnreadFriendRequests = function (token) {
+        var _this = this;
+        return new Promise(function (resolve, reject) { return __awaiter(_this, void 0, void 0, function () {
+            var getFriendshipRequestsCount;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, FriendshipRequestsModel_1.default.count('WHERE target_token = ? AND viewed = ?', [token, 0])];
+                    case 1:
+                        getFriendshipRequestsCount = _a.sent();
+                        resolve(getFriendshipRequestsCount);
+                        return [2 /*return*/];
+                }
+            });
+        }); });
+    };
     // Si l'utilisateur a demandé un membre en ami
     Friendship.prototype.hasRequested = function (token, target) {
         var _this = this;

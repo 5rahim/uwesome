@@ -4,7 +4,7 @@ var http = require("http");
 var debug = require("debug");
 var Server_1 = require("./Server");
 var Socketio_1 = require("./app/Socketio");
-var FriendRequests_1 = require("./core/FriendRequests");
+var Friendship_1 = require("./core/Friendship");
 debug('ts-express:server');
 var port = normalizePort(process.env.PORT || 4003);
 Server_1.default.set('port', port);
@@ -46,4 +46,4 @@ function onListening() {
 }
 var io = require('socket.io').listen(server);
 Socketio_1.default.initialize(io);
-FriendRequests_1.default.initialize(io);
+Friendship_1.default.initialize(io);

@@ -872,6 +872,14 @@ a {
     transform: translateY(-0.15em); }
   .button:focus {
     outline: 0; }
+  .button.button-chips {
+    font-size: .8em;
+    padding: .5em .8em; }
+    .button.button-chips:hover {
+      box-shadow: none; }
+    .button.button-chips.button-chips-colored {
+      background-color: #ef4f47;
+      color: #fff; }
   .button.button-option {
     background-color: #fff;
     padding: .5em .8em; }
@@ -1014,15 +1022,16 @@ a {
     .topbar .topbar-icons ul {
       width: 100%;
       position: relative; }
-      .topbar .topbar-icons ul li {
+      .topbar .topbar-icons ul li:not(.chips-list) {
         float: left;
         margin: 0 .6em;
         color: rgba(0, 0, 0, 0.5);
         position: relative; }
-        .topbar .topbar-icons ul li:hover {
-          cursor: pointer;
-          color: #000; }
-        .topbar .topbar-icons ul li span.badge {
+        .topbar .topbar-icons ul li:not(.chips-list) span.topbar-icon {
+          cursor: pointer; }
+          .topbar .topbar-icons ul li:not(.chips-list) span.topbar-icon:hover {
+            color: #000; }
+        .topbar .topbar-icons ul li:not(.chips-list) span.badge {
           position: absolute;
           right: -.7em;
           top: -.8em;
@@ -1037,10 +1046,12 @@ a {
           border-radius: 50%; }
   .topbar .topbar-box {
     position: absolute;
+    display: none;
     right: 0;
     top: 2.4em;
-    width: 20em;
+    width: 26em;
     background-color: #fff;
+    z-index: 99;
     border-radius: 5px;
     border: 1px #ddd solid;
     box-shadow: 0 0 4px rgba(0, 0, 0, 0.15); }
@@ -1049,7 +1060,13 @@ a {
       font-size: .8em;
       padding: .6em; }
     .topbar .topbar-box .topbar-box-content {
-      padding: .6em; }
+      overflow: hidden;
+      padding-right: .8em; }
+      .topbar .topbar-box .topbar-box-content .topbar-box-in {
+        overflow: hidden; }
+      .topbar .topbar-box .topbar-box-content .topbar-box-message {
+        padding: 1em;
+        text-align: center; }
     .topbar .topbar-box:after, .topbar .topbar-box:before {
       bottom: 100%;
       right: 2%;
@@ -1168,5 +1185,36 @@ a {
 .profile-in {
   background-color: #fff;
   padding: 1em; }
+
+.chips {
+  width: 100%;
+  padding: 0 .5em .5em .5em !important;
+  overflow: hidden;
+  position: relative; }
+  .chips .chips-in {
+    margin-top: .5em; }
+    .chips .chips-in .chips-image {
+      height: 2.5em;
+      width: 2.5em;
+      background-size: cover;
+      background-position: center;
+      border-radius: 50%;
+      float: left;
+      display: inline-block;
+      margin-right: .5em; }
+    .chips .chips-in .chips-title {
+      color: #323232;
+      display: block; }
+    .chips .chips-in .chips-text {
+      font-size: .8em;
+      margin-bottom: .8em;
+      display: inline-block; }
+    .chips .chips-in .chips-choice {
+      text-align: right;
+      width: 100%;
+      float: right;
+      position: absolute;
+      bottom: .5em;
+      right: .5em; }
 
 /*# sourceMappingURL=kommunity.css.map */

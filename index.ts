@@ -3,7 +3,7 @@ import * as debug from 'debug';
 
 import Server from './Server';
 import Socket from './app/Socketio';
-import FriendRequests from "./core/FriendRequests";
+import Friendship from "./core/Friendship";
 
 debug('ts-express:server');
 
@@ -48,8 +48,7 @@ function onListening(): void {
 }
 
 const io = require('socket.io').listen(server);
-import * as express from 'express';
 
 Socket.initialize(io)
-FriendRequests.initialize(io)
+Friendship.initialize(io)
 

@@ -1,8 +1,12 @@
 <script>
     feather.replace();
-    feather.icons.x.toSvg({ class: 'user-add-icon', 'stroke-width': 1, color: 'red' });
 </script>
 <script src="/socket.io/socket.io.js"></script>
+<script>
+    var io;
+    const url = 'http://127.0.0.1:4003';
+    const socket = io.connect(url);
+</script>
 <script src="/logic/jquery.min.js"></script>
 <script src="/timeago.js/dist/timeago.js"></script>
 <script src="/timeago.js/dist/timeago.locales.min.js"></script>
@@ -11,23 +15,22 @@
 <% if(req.session.user) { %>
 <script>
     const user_token = '<%= user.token %>';
+    const lang = '<%= req.cookies.ilang %>';
+    const timeagoInstance = timeago();
 </script>
 <% } %>
 
 <!-- main -->
 <script src="/logic/Main.js"></script>
+<script>
+    Main.init(socket, user_token);
+    Main.timeAgo(timeagoInstance, lang);
+</script>
 
 <!-- profile -->
 <% if(pageTitle == 'profile %s') { %>
 <script>
 
-    var timeagoInstance = timeago();
-    Main.timeAgo(timeagoInstance, '<%= req.cookies.ilang %>');
-
-</script>
-<script>
-
-    var lang = '<%= req.cookies.ilang %>';
     Main.requestFriendButton(lang, feather);
 
 </script>
@@ -42,6 +45,7 @@
 <% if(req.session.user) { %>
 <script>
     Main.requestFriend(socket, user_token)
+    Main.displayFriendRequests(socket, user_token, timeagoInstance, lang)
 </script>
 <% } %>
 

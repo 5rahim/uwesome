@@ -142,6 +142,17 @@ $red-color: #e03d47;
 	&:focus {
 		outline: 0;
 	}
+	&.button-chips {
+		font-size: .8em;
+		padding: .5em .8em;
+		&:hover {
+			box-shadow: none;
+		}
+		&.button-chips-colored {
+			background-color: $base-color;
+			color: $white;
+		}
+	}
 	&.button-option {
 		background-color: $white;
 		padding: .5em .8em;
@@ -320,14 +331,16 @@ $topbarHeight: 3.5rem;
 		ul {
 			width: 100%;
 			position: relative;
-			li {
+			li:not(.chips-list) {
 				float: left;
 				margin: 0 .6em;
 				color: rgba($black, .5);
 				position: relative;
-				&:hover {
+				span.topbar-icon {
+					&:hover {
+						color: $black;
+					}
 					cursor: pointer;
-					color: $black;
 				}
 				$badgeSize: 18px;
 				span.badge {
@@ -349,11 +362,12 @@ $topbarHeight: 3.5rem;
 	}
 	.topbar-box {
 		position: absolute;
+		display: none;
 		right: 0;
 		top: 2.4em;
-		width: 20em;
+		width: 26em;
 		background-color: $white;
-
+		z-index: 99;
 		border-radius: 5px;
 		border: 1px #ddd solid;
 		box-shadow: 0 0 4px rgba($black, .15);
@@ -363,7 +377,15 @@ $topbarHeight: 3.5rem;
 			padding: .6em;
 		}
 		.topbar-box-content {
-			padding: .6em;
+			overflow: hidden;
+			padding-right: .8em;
+			.topbar-box-in {
+				overflow: hidden;
+			}
+			.topbar-box-message {
+				padding: 1em;
+				text-align: center;
+			}
 		}
 		&:after, &:before {
 			bottom: 100%;
@@ -520,4 +542,41 @@ $tabsHeight: 3.5em;
 .profile-in {
 	background-color: $white;
 	padding: 1em;
+}
+
+.chips {
+	width: 100%;
+	padding: 0 .5em .5em .5em !important;
+	overflow: hidden;
+	position: relative;
+	.chips-in {
+		margin-top: .5em;
+		.chips-image {
+			height: 2.5em;
+			width: 2.5em;
+			background-size: cover;
+			background-position: center;
+			border-radius: 50%;
+			float: left;
+			display: inline-block;
+			margin-right: .5em;
+		}
+		.chips-title {
+			color: #323232;
+			display: block;
+		}
+		.chips-text {
+			font-size: .8em;
+			margin-bottom: .8em;
+			display: inline-block;
+		}
+		.chips-choice {
+			text-align: right;
+			width: 100%;
+			float: right;
+			position: absolute;
+			bottom: .5em;
+			right: .5em;
+		}
+	}
 }

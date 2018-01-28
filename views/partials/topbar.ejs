@@ -25,7 +25,10 @@
 
                         <div class="topbar-icons">
                             <ul>
-                                <li><i data-feather="users"></i>
+                                <li>
+                                    <span class="topbar-icon" id="friendRequestsIcon" data-loading-state="no">
+                                        <i data-feather="users"></i>
+                                    </span>
                                     <span id="friendRequestsBubble">
                                         <% if(currentUserHasUnreadFriendRequests) { %>
                                         <span class="badge"><%= currentUserUnreadFriendRequestsCount %></span>
@@ -34,9 +37,9 @@
                                     <div class="topbar-box" id="friendRequestsBox">
                                         <div class="topbar-box-header">Demandes d'ami</div>
                                         <div class="topbar-box-content">
-                                            <ul>
-                                                <li></li>
-                                            </ul>
+                                            <div class="topbar-box-in" id="friendRequestsDisplay">
+
+                                            </div>
                                         </div>
                                     </div>
                                 </li>

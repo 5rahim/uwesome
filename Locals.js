@@ -35,8 +35,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var Notify_1 = require("./core/Notify");
 var User_1 = require("./core/User");
+var Friendship_1 = require("./core/Friendship");
 var Locals = /** @class */ (function () {
     function Locals() {
     }
@@ -48,11 +48,11 @@ var Locals = /** @class */ (function () {
                 switch (_d.label) {
                     case 0:
                         _a = res.locals;
-                        return [4 /*yield*/, Notify_1.default.hasUnreadFriendRequests(req)];
+                        return [4 /*yield*/, Friendship_1.default.hasUnreadFriendRequests(req.session.user)];
                     case 1:
                         _a.currentUserHasUnreadFriendRequests = _d.sent();
                         _b = res.locals;
-                        return [4 /*yield*/, Notify_1.default.countUnreadFriendRequests(req)];
+                        return [4 /*yield*/, Friendship_1.default.countUnreadFriendRequests(req.session.user)];
                     case 2:
                         _b.currentUserUnreadFriendRequestsCount = _d.sent();
                         _c = res.locals;

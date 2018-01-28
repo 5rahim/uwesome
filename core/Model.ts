@@ -50,6 +50,26 @@ export class Model {
 
     }
 
+    public count(query: string, value: any) {
+
+        return new Promise((resolve, reject) => {
+
+            const sql = 'SELECT * FROM '+ this.table +' ' + query
+
+            DB.connection.query(sql, value, (err, rows) => {
+
+                if(err)
+                    reject(err)
+
+                if(rows)
+                    resolve(rows.length)
+
+            });
+
+        })
+
+    }
+
     public find(query: string, value: any) {
 
         return new Promise((resolve, reject) => {

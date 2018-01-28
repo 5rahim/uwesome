@@ -32,6 +32,18 @@ var Model = /** @class */ (function () {
             });
         });
     };
+    Model.prototype.count = function (query, value) {
+        var _this = this;
+        return new Promise(function (resolve, reject) {
+            var sql = 'SELECT * FROM ' + _this.table + ' ' + query;
+            DataAccess_1.default.connection.query(sql, value, function (err, rows) {
+                if (err)
+                    reject(err);
+                if (rows)
+                    resolve(rows.length);
+            });
+        });
+    };
     Model.prototype.find = function (query, value) {
         var _this = this;
         return new Promise(function (resolve, reject) {
