@@ -377,10 +377,17 @@ $topbarHeight: 3.5rem;
 			padding: .6em;
 		}
 		.topbar-box-content {
-			overflow: hidden;
 			padding-right: .8em;
+			position: relative;
+			max-height: 190px;
 			.topbar-box-in {
 				overflow: hidden;
+				.topbar-box-loading {
+					padding: 1em;
+					text-align: center;
+					font-size: .8em;
+					color: #323232;
+				}
 			}
 			.topbar-box-message {
 				padding: 1em;

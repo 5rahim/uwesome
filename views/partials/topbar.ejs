@@ -26,7 +26,7 @@
                         <div class="topbar-icons">
                             <ul>
                                 <li>
-                                    <span class="topbar-icon" id="friendRequestsIcon" data-loading-state="no">
+                                    <span class="topbar-icon" id="topbarIcon" data-func="display-friend-requests" data-td='{"target": "friendRequests", "displayTarget": "friendRequestsDisplay"}' data-state="no">
                                         <i data-feather="users"></i>
                                     </span>
                                     <span id="friendRequestsBubble">
@@ -34,16 +34,29 @@
                                         <span class="badge"><%= currentUserUnreadFriendRequestsCount %></span>
                                         <% } %>
                                     </span>
-                                    <div class="topbar-box" id="friendRequestsBox">
+                                    <div class="topbar-box" id="friendRequests">
                                         <div class="topbar-box-header">Demandes d'ami</div>
-                                        <div class="topbar-box-content">
+                                        <div class="topbar-box-content" id="friendRequestsContent">
                                             <div class="topbar-box-in" id="friendRequestsDisplay">
 
                                             </div>
                                         </div>
                                     </div>
                                 </li>
-                                <li><i data-feather="bell"></i></li>
+                                <li>
+                                    <span class="topbar-icon" id="topbarIcon" data-func="display-global-notifications" data-td='{"target": "globalNotifications", "displayTarget": "globalNotificationsDisplay"}' data-state="no">
+                                        <i data-feather="bell"></i>
+                                    </span>
+                                    <!-- bubble here -->
+                                    <div class="topbar-box" id="globalNotifications">
+                                        <div class="topbar-box-header">Notifications</div>
+                                        <div class="topbar-box-content">
+                                            <div class="topbar-box-in" id="globalNotificationsDisplay">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
                                 <li><i data-feather="message-square"></i></li>
                                 <li><i data-feather="more-vertical"></i></li>
                             </ul>

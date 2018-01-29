@@ -22,6 +22,7 @@
 
 <!-- main -->
 <script src="/logic/Main.js"></script>
+<script src="/logic/NotifyClient.js"></script>
 <script>
     Main.init(socket, user_token);
     Main.timeAgo(timeagoInstance, lang);
@@ -44,8 +45,17 @@
 <!-- online -->
 <% if(req.session.user) { %>
 <script>
+    // Demande d'ami
     Main.requestFriend(socket, user_token)
-    Main.displayFriendRequests(socket, user_token, timeagoInstance, lang)
+
+    const frPs = new PerfectScrollbar('#friendRequestsContent', {
+        wheelSpeed: 2,
+        wheelPropagation: true,
+        minScrollbarLength: 20
+    })
+    frPs.update()
+    NotifyClient.init(socket, user_token, timeagoInstance, lang)
+
 </script>
 <% } %>
 

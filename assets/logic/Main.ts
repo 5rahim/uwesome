@@ -70,8 +70,6 @@ class MainClass {
 
         $('#chooseLogin').click(function() {
             $('#chooseSignup').removeClass('selected')
-            $(this).addClass('selected')
-            $('#signup').hide()
             $('#login').show()
         })
 
@@ -82,6 +80,8 @@ class MainClass {
             $('#signup').show()
         })
 
+        $(this).addClass('selected')
+            $('#signup').hide()
     }
 
 
@@ -109,113 +109,6 @@ class MainClass {
                 socket.emit('cancel-friend-request', data)
 
             }
-
-        })
-
-    }
-
-
-
-    public displayFriendRequests(socket, token, timeagoInstance, lang) {
-
-        const langTemplate = (sentence, lang) => {
-            if(sentence == 'no.friend.request')
-                return lang == 'fr' ? 'Aucune demande d\'ami' : 'No friend request'
-            if(sentence == 'loading')
-                return lang == 'fr' ? 'Chargement...' : 'Loading...'
-            if(sentence == 'request.made')
-                return lang == 'fr' ? 'Demande faite' : 'Request sent'
-        }
-
-        const loading  = () => {
-
-            return ('<div class="topbar-box-loading">'+ langTemplate('loading', lang) +'</div>')
-
-        }
-
-        // Clic
-        const friendRequestsIcon = $('#friendRequestsIcon')
-        let loadingState = friendRequestsIcon.data('loading-state')
-        // Lors du clic
-        friendRequestsIcon.click(() => {
-
-            // Si les demandes n'ont pas été chargées
-            if(loadingState == 'no') {
-
-                // On affiche le loader
-                $('#friendRequestsDisplay').html(loading())
-                // On affiche la box
-                $('#friendRequestsBox').fadeIn(200)
-                // On change le state
-                friendRequestsIcon.attr('data-loading-state', 'loaded')
-                loadingState = 'loaded'
-
-                setTimeout(() => {
-                    // On demande a obtenir les demandes
-                    socket.emit('catch-friend-requests', token)
-
-                }, 500)
-
-            } else if (loadingState == 'loaded') {
-
-                // Si les demandes sont chargées
-                $('#friendRequestsBox').fadeToggle(200)
-
-            }
-
-        })
-
-        const template = (data) => {
-
-            return (
-                '<div class="chips">\
-                    <div class="chips-in">\
-                        <div class="chips-image" style="'+ data.emitter.avatar +'"></div>\
-                        <a href="/user/'+ data.emitter.username +'" class="chips-title" title="Voir le profil de '+ data.emitter.username +'">'+ data.emitter.username +'</a>\
-                        <span class="chips-text">'+ langTemplate('request.made', lang) +' <span class="timeAgo" datetime="'+ data.friendRequest.request_date +'">...</span></span>\
-                        <div class="chips-choice">\
-                            <button class="button button-chips button-chips-colored" data-gd=\'{ "token" : "'+ data.emitter.token +'" }\'>Accepter</button>\
-                            <button class="button button-chips button-chips-default">Refuser</button>\
-                        </div>\
-                    </div>\
-                </div>'
-            )
-
-
-
-        }
-
-        const template2 = () => {
-
-            return (
-                '<div class="topbar-box-message">'+ langTemplate('no.friend.request', lang) +'</div>'
-            )
-
-        }
-
-        socket.on('before-display-friend-requests', (data) => {
-
-            $('#friendRequestsDisplay').html('')
-
-            socket.emit('get-friend-requests', data)
-
-        })
-
-        // Si il y a des demandes d'ami
-        socket.on('display-friend-request', (data) => {
-
-            $('#friendRequestsDisplay').append(template(data))
-
-            timeagoInstance.render($('.timeAgo'), lang);
-
-        })
-
-        // Si il n'y a pas de demandes d'ami
-        socket.on('no-friend-request', () => {
-
-            $('#friendRequestsDisplay').html('')
-
-            $('#friendRequestsDisplay').html(template2())
 
         })
 

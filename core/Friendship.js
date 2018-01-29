@@ -80,6 +80,9 @@ var Friendship = /** @class */ (function () {
                 });
             }); });
             socket.on('catch-friend-requests', function (token) {
+                socket.emit('before-display-friend-requests', token);
+            });
+            socket.on('get-friend-requests', function (token) {
                 // Recupérer les demandes d'amis
                 DataAccess_1.default.connection.query('SELECT * FROM ' + _this.friendshipRequestsTable + ' WHERE target_token = ?', [token], function (err, rows) { return __awaiter(_this, void 0, void 0, function () {
                     var _a, _b, _i, i, emitter, emitterData, _c;
@@ -106,7 +109,7 @@ var Friendship = /** @class */ (function () {
                             case 3:
                                 emitterData = (_c.avatar = _d.sent(),
                                     _c);
-                                socket.emit('before-display-friend-requests', { friendRequest: rows[i], emitter: emitterData });
+                                socket.emit('display-friend-requests', { friendRequest: rows[i], emitter: emitterData });
                                 _d.label = 4;
                             case 4:
                                 _i++;
@@ -119,9 +122,6 @@ var Friendship = /** @class */ (function () {
                         }
                     });
                 }); });
-            });
-            socket.on('get-friend-requests', function (data) {
-                socket.emit('display-friend-request', data);
             });
         });
     };

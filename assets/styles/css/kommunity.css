@@ -1060,10 +1060,16 @@ a {
       font-size: .8em;
       padding: .6em; }
     .topbar .topbar-box .topbar-box-content {
-      overflow: hidden;
-      padding-right: .8em; }
+      padding-right: .8em;
+      position: relative;
+      max-height: 190px; }
       .topbar .topbar-box .topbar-box-content .topbar-box-in {
         overflow: hidden; }
+        .topbar .topbar-box .topbar-box-content .topbar-box-in .topbar-box-loading {
+          padding: 1em;
+          text-align: center;
+          font-size: .8em;
+          color: #323232; }
       .topbar .topbar-box .topbar-box-content .topbar-box-message {
         padding: 1em;
         text-align: center; }

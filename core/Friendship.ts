@@ -49,7 +49,14 @@ export class Friendship {
             })
 
 
-            socket.on('catch-friend-requests', token => {
+            socket.on('catch-friend-requests', (token) => {
+
+                socket.emit('before-display-friend-requests', token)
+
+
+            })
+
+            socket.on('get-friend-requests', (token) => {
 
                 // Recupérer les demandes d'amis
                 DB.connection.query('SELECT * FROM '+ this.friendshipRequestsTable +' WHERE target_token = ?', [token], async (err, rows) => {
@@ -66,7 +73,7 @@ export class Friendship {
                                 avatar: await User.getAvatar(emitter.token)
                             }
 
-                            socket.emit('before-display-friend-requests', { friendRequest: rows[i], emitter: emitterData })
+                            socket.emit('display-friend-requests', { friendRequest: rows[i], emitter: emitterData })
 
                         }
 
@@ -77,12 +84,6 @@ export class Friendship {
                     }
 
                 })
-
-            })
-
-            socket.on('get-friend-requests', (data) => {
-
-                socket.emit('display-friend-request', data)
 
             })
 
